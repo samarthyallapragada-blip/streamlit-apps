@@ -8,7 +8,7 @@ api_key = st.text_input("Enter your Gemini API key:", type="password")
 
 if api_key:
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel("gemini-1.5-flash")
+    model = genai.GenerativeModel("gemini-pro")
 
     if "messages" not in st.session_state:
         st.session_state.messages = []
@@ -23,8 +23,11 @@ if api_key:
         with st.chat_message("user"):
             st.write(prompt)
 
-        response = model.generate_content(prompt)
-        reply = response.text
+        try:
+            response = model.generate_content(prompt)
+            reply = response.text
+        except Exception as e:
+            reply = f"Error: {e}"
 
         st.session_state.messages.append({"role": "assistant", "content": reply})
         with st.chat_message("assistant"):
